@@ -9,4 +9,7 @@ class ConfigProperties() {
 
     @Value("\${cm.int.kafka.server-url}")
     lateinit var serverUrl: String
+
+    @Value("\${cm.messaging.topic}")
+    lateinit var topic: String
 }

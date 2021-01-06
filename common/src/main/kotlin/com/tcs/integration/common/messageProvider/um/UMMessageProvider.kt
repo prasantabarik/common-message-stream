@@ -6,9 +6,7 @@ import com.tcs.integration.common.messageProvider.MessageProvider
 class UMMessageProvider (
         private val configProperties: ConfigProperties
 ): MessageProvider {
-
-
     override fun sendMessage(destination: String, payload: String) {
-        TODO("Not yet implemented")
+        Config(configProperties).publish("TEST UM MESSAGE")
     }
 }
