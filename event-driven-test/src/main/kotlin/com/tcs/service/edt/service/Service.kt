@@ -8,6 +8,11 @@ import org.springframework.stereotype.Service
 class Service(private val messageProvider: MessageProvider) {
 
     fun publishMessage(msg: String){
-        messageProvider.sendMessage("StoreOrderReference",msg)
+        messageProvider.sendMessage(msg)
+    }
+
+    fun subscribeMessage():String {
+        return messageProvider.subscribeMessage()
+//        println("SUBSCRIBED : " + messageProvider.subscribeMessage())
     }
 }

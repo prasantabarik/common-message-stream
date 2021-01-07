@@ -2,5 +2,6 @@ package com.tcs.integration.common.messageProvider
 
 interface MessageProvider {
 
-    fun sendMessage(destination: String, payload: String)
+    fun sendMessage(payload: String)
+    fun subscribeMessage(): String
 }

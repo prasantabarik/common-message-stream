@@ -9,16 +9,12 @@ import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.core.DefaultKafkaProducerFactory
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.kafka.core.ProducerFactory
-import org.springframework.kafka.support.TransactionSupport
-
-
-import java.time.Duration
-
+import java.io.Closeable
+import java.util.concurrent.CopyOnWriteArrayList
 
 @EnableKafka
-class KafkaMessageProvider(
-        private val configProperties: ConfigProperties
-) : MessageProvider {
+class KafkaMessageProvider(private val configProperties: ConfigProperties) : MessageProvider, Closeable {
+    private val messages: CopyOnWriteArrayList<String> = CopyOnWriteArrayList<String>()
     var producerFactory: DefaultKafkaProducerFactory<String, Any>? = null
 
     private fun producerFactory(): ProducerFactory<String, Any> {
@@ -37,20 +33,29 @@ class KafkaMessageProvider(
 
     @KafkaListener(topics = ["StoreOrderReference"], groupId = "kafka-subscribe")
     fun receive(payload: String) {
+        messages.add(payload)
         println("KAFKA MESSAGE RECEIVED :: " + payload)
     }
 
-    override fun sendMessage(destination: String, payload: String) {
-        println("SENDMESSAGE :: TOPIC - ${destination} Message - ${payload}")
-        kafkaTemplate().send(destination,payload).use{}
+    override fun subscribeMessage(): String {
+        val result = messages.toString()
+        messages.clear()
+        return result
+    }
+
+    override fun sendMessage(payload: String) {
+        println("Message - ${payload}")
+        kafkaTemplate().send(configProperties.topic, payload).use{}
+    }
+
+    override fun close() {
+        println("Finalize Close calls here")
     }
 
     private fun Any.use(function: () -> Unit) {
         try {
-            // println("COMES INTO USE TRY LISTENER")
         } finally {
             producerFactory?.destroy()
         }
     }
 }
-
