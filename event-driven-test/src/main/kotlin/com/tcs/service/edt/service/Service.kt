@@ -1,18 +1,19 @@
 package com.tcs.service.edt.service
 
-import com.tcs.integration.common.configuration.MessagingConfiguration
-import com.tcs.integration.common.messageProvider.MessageProvider
+import com.tcs.integration.common.messageProvider.AbstractMessageProvider
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
 @Service
-class Service(private val messageProvider: MessageProvider) {
+class Service {
+    @Value("\${cm.messaging.topic}")
+    lateinit var topic: String
 
-    fun publishMessage(msg: String){
-        messageProvider.sendMessage(msg)
+    fun publishMessage(serviceCall: AbstractMessageProvider, type: String, msg: Any) {
+        serviceCall.sendMessage(topic, msg)
     }
 
-    fun subscribeMessage():String {
-        return messageProvider.subscribeMessage()
-//        println("SUBSCRIBED : " + messageProvider.subscribeMessage())
+    fun subscribeMessage(serviceCall: AbstractMessageProvider, type: String): String? {
+        return serviceCall.subscribeMessage()
     }
 }

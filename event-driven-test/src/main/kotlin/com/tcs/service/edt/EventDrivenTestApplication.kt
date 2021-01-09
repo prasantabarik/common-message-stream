@@ -1,12 +1,8 @@
 package com.tcs.service.edt
 
-import com.tcs.integration.common.configuration.MessagingConfiguration
-import org.springframework.boot.ExitCodeGenerator
-import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.ConfigurableApplicationContext
-
 
 @SpringBootApplication(scanBasePackages = ["com.tcs.service.edt", "com.tcs.integration.common"])
 class EventDrivenTestApplication
