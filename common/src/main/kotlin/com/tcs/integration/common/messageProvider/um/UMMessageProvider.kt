@@ -25,7 +25,7 @@ class UMMessageProvider (private val configProperties: ConfigProperties): Abstra
     override fun sendMessage(destination: String, payload: Any) {
         if (channel == null) {
             val channelAttribute = nChannelAttributes()
-            channelAttribute.setName(configProperties.topic)
+            channelAttribute.setName(configProperties.umtopic)
             channel = getSessionValue()?.findChannel(channelAttribute)
             channel?.addSubscriber(this, 0)
         }
@@ -37,7 +37,7 @@ class UMMessageProvider (private val configProperties: ConfigProperties): Abstra
 
     override fun go(event: nConsumeEvent) {
         try {
-            this.messageListener?.receive(event.properties.getString(String(event.eventData)))
+            this.messageListener?.receive("um", event.properties.getString(String(event.eventData)))
             messages.add(event.properties.getString(String(event.eventData)))
             // Not required if topic is created via WM
             // getChannels()?.purgeEvents(event.getEventID(), event.getEventID())

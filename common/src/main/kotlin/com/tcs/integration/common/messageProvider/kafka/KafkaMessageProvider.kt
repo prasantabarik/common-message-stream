@@ -34,11 +34,11 @@ class KafkaMessageProvider(private val configProperties: ConfigProperties) : Abs
         return KafkaTemplate(producerFactory())
     }
 
-    @KafkaListener(topics = ["StoreOrderReference"], groupId = "kafka-subscribe")
+    @KafkaListener(topics = ["StoreOrderReference", "prepare-ecmr"], groupId = "kafka-subscribe")
     override fun receive(payload: Any) {
         println("KAFKA MESSAGE RECEIVED :: $payload")
         val record: ConsumerRecord<String, Any> = payload as ConsumerRecord<String, Any>
-        this.messageListener?.receive(record.value())
+        this.messageListener?.receive("kafka", record.value())
         messages.add(record.value() as String?)
     }
 

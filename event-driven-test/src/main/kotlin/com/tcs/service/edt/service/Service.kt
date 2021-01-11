@@ -6,10 +6,9 @@ import org.springframework.stereotype.Service
 
 @Service
 class Service {
-    @Value("\${cm.messaging.topic}")
-    lateinit var topic: String
 
-    fun publishMessage(serviceCall: AbstractMessageProvider, type: String, msg: Any) {
+    fun publishMessage(serviceCall: AbstractMessageProvider, topic: String, msg: Any) {
+        println("TOPIC $topic")
         serviceCall.sendMessage(topic, msg)
     }
 

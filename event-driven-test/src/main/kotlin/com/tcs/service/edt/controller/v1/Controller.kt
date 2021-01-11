@@ -9,8 +9,8 @@ class Controller(private val kafka: Kafka, private val um: UM) {
     @RequestMapping(value = ["/api/postEvents/{type}"], method = [RequestMethod.POST])
     fun getMessage(@PathVariable type: String, @RequestBody payload: String) {
         when(type) {
-            "kafka" ->  kafka.publishMessage(type, payload)
-            "um"    ->  um.publishMessage(type, payload)
+            "kafka" ->  kafka.publishMessage(payload)
+            "um"    ->  um.publishMessage(payload)
         }
     }
 
