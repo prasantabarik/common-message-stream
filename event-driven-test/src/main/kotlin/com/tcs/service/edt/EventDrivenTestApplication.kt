@@ -7,6 +7,8 @@ import org.springframework.boot.runApplication
 import org.springframework.context.ConfigurableApplicationContext
 import java.sql.Timestamp
 import java.util.*
+import com.tcs.service.edt.eventuate.Producer
+import com.tcs.service.edt.model.PrepareECMR
 
 @SpringBootApplication(scanBasePackages = ["com.tcs.service.edt", "com.tcs.integration.common"])
 
@@ -22,9 +24,12 @@ fun main(args: Array<String>) {
 					val today = Date()
 					val ts1 = Timestamp(today.time)
 
-					khttp.post(
-							url  = "http://localhost:8099/api/postEvents/kafka",
-							json = mapOf("data" to it.optString("data")))
+					// it.optString("data")
+					ctx.getBean(Producer::class.java).create(PrepareECMR(it.optString("data")))
+
+//					khttp.post(
+//							url  = "http://localhost:8099/api/postEvents/kafka",
+//							json = mapOf("data" to it.optString("data")))
 
 					/*
 					Even though just leave it for future reference
