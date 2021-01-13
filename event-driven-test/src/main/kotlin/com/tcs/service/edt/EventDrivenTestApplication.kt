@@ -7,6 +7,7 @@ import org.springframework.boot.runApplication
 import org.springframework.context.ConfigurableApplicationContext
 import java.sql.Timestamp
 import java.util.*
+
 import com.tcs.service.edt.eventuate.Producer
 import com.tcs.service.edt.model.PrepareECMR
 
@@ -23,9 +24,8 @@ fun main(args: Array<String>) {
 				"um" -> {
 					val today = Date()
 					val ts1 = Timestamp(today.time)
-
-					// it.optString("data")
-					ctx.getBean(Producer::class.java).create(PrepareECMR(it.optString("data")))
+					val obj = JSONObject(it.optString("data"))
+					ctx.getBean(Producer::class.java).create(PrepareECMR(obj.getString("shipmentId")))
 
 //					khttp.post(
 //							url  = "http://localhost:8099/api/postEvents/kafka",
