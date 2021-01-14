@@ -23,7 +23,7 @@
 		<!-- 		WORKING SOLUTION AFTER MAVEN INSTALL LOCAL		-->
 		<dependency>
 			<groupId>com.pcbsys.nirvana.client</groupId>
-			<artifactId>nClientTest</artifactId>
+			<artifactId>nClient</artifactId>
 			<version>1.0</version>
 		</dependency>
 		<dependency>
