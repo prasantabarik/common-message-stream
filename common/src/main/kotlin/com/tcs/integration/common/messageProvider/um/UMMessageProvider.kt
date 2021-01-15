@@ -22,6 +22,7 @@ class UMMessageProvider (private val configProperties: ConfigProperties): nEvent
     var sessionSubscribe: nSession? = null
 
     init {
+        println("UM Init:: " + sessionSubscribe)
         if (sessionSubscribe == null) {
             sessionSubscribe = nSessionFactory.create(nSessionAttributes(arrayOf(configProperties.serverUMUrl)))
             sessionSubscribe!!.init()

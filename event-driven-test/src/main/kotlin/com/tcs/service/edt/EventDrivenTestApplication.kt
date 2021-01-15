@@ -27,10 +27,6 @@ fun main(args: Array<String>) {
 					val obj = JSONObject(it.optString("data"))
 					ctx.getBean(Producer::class.java).create(PrepareECMR(obj.getString("shipmentId")))
 
-//					khttp.post(
-//							url  = "http://localhost:8099/api/postEvents/kafka",
-//							json = mapOf("data" to it.optString("data")))
-
 					/*
 					Even though just leave it for future reference
 					 */
@@ -45,17 +41,25 @@ fun main(args: Array<String>) {
 					ctx.getBean(EventService::class.java).create(events)
 					 */
 				}
+				"kafka" -> {
+					val obj = JSONObject(JSONObject(it.optString("data")).optString("headers"))
+					val regex = "\\.([A-Za-z]+)$".toRegex()
+					val matchResult = regex.find(obj.getString("event-aggregate-type"))
+					val (eventName) = matchResult!!.destructured
+
+					khttp.post(
+							url  = "http://20.73.230.209:9200/events/1/" + obj.getString("PARTITION_ID") + "-" + eventName,
+							json = mapOf("data" to it.optString("data")))
+				}
 			}
 		} catch(e: Exception) {
 			println(e)
 		}
 	}
-//	ctx.getBean(MessagingConfiguration::class.java)
-
+	//	ctx.getBean(MessagingConfiguration::class.java)
 	// ctx.close()
 	//	val exitCode = SpringApplication.exit(ctx, ExitCodeGenerator { // return the error code
 	//		0
 	//	})
 	//System.exit(exitCode)
 }
-

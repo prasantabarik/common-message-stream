@@ -21,7 +21,7 @@ class MessagingConfiguration(private val configProperties: ConfigProperties) {
 
     @Bean
     @Qualifier("um")
-     fun messageProviderUM(): AbstractMessageProvider {
+    fun messageProviderUM(): AbstractMessageProvider {
         println("UMMessageProvider")
         return UMMessageProvider(configProperties)
     }
