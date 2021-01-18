@@ -21,11 +21,13 @@ class UMMessageProvider (private val configProperties: ConfigProperties): nEvent
 
     init {
         if (sessionSubscribe == null) {
-            sessionSubscribe = nSessionFactory.create(nSessionAttributes(arrayOf(configProperties.serverUMUrl)))
-            sessionSubscribe!!.init()
-            val channelAttribute = nChannelAttributes()
-            channelAttribute.name = configProperties.umtopic
-            sessionSubscribe!!.findChannel(channelAttribute).addSubscriber(this)
+            try {
+                sessionSubscribe = nSessionFactory.create(nSessionAttributes(arrayOf(configProperties.serverUMUrl)))
+                sessionSubscribe!!.init()
+                val channelAttribute = nChannelAttributes()
+                channelAttribute.name = configProperties.umtopic
+                sessionSubscribe!!.findChannel(channelAttribute).addSubscriber(this)
+            } catch(e: Exception) { }
         }
     }
 

@@ -3,7 +3,6 @@ package com.tcs.service.edt.integration
 import com.tcs.integration.common.messageProvider.AbstractMessageProvider
 import com.tcs.service.edt.message.Reactor
 import com.tcs.service.edt.service.Service
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
