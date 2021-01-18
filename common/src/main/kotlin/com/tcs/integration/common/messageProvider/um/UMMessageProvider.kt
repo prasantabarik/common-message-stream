@@ -11,10 +11,8 @@ import com.pcbsys.nirvana.client.nSessionAttributes
 import com.pcbsys.nirvana.client.nSessionFactory
 import com.tcs.integration.common.configuration.ConfigProperties
 import com.tcs.integration.common.messageProvider.AbstractMessageProvider
-import org.springframework.stereotype.Component
 import java.util.concurrent.CopyOnWriteArrayList
 
-@Component
 class UMMessageProvider (private val configProperties: ConfigProperties): nEventListener, AbstractMessageProvider() {
     private val messages: CopyOnWriteArrayList<String> = CopyOnWriteArrayList<String>()
     var session: nSession?  = null
@@ -22,7 +20,6 @@ class UMMessageProvider (private val configProperties: ConfigProperties): nEvent
     var sessionSubscribe: nSession? = null
 
     init {
-        println("UM Init:: " + sessionSubscribe)
         if (sessionSubscribe == null) {
             sessionSubscribe = nSessionFactory.create(nSessionAttributes(arrayOf(configProperties.serverUMUrl)))
             sessionSubscribe!!.init()

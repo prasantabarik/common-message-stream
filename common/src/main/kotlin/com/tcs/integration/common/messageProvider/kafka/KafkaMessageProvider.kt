@@ -12,14 +12,12 @@ import org.springframework.kafka.annotation.EnableKafka
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
 import org.springframework.kafka.core.*
-import org.springframework.stereotype.Component
 import java.io.Closeable
 import java.util.concurrent.CopyOnWriteArrayList
 
 
 
 @EnableKafka
-@Component
 class KafkaMessageProvider(private val configProperties: ConfigProperties) : AbstractMessageProvider(), Closeable {
     private val messages: CopyOnWriteArrayList<String> = CopyOnWriteArrayList<String>()
     var producerFactory: DefaultKafkaProducerFactory<String, Any>? = null
