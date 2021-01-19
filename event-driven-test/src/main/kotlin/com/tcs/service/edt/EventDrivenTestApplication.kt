@@ -1,15 +1,16 @@
 package com.tcs.service.edt
 
 import RxBus
+import com.tcs.service.edt.eventuate.Producer
+import com.tcs.service.edt.model.PrepareECMR
+import khttp.post
 import org.json.JSONObject
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.ConfigurableApplicationContext
 import java.sql.Timestamp
+import java.text.SimpleDateFormat
 import java.util.*
-
-import com.tcs.service.edt.eventuate.Producer
-import com.tcs.service.edt.model.PrepareECMR
 
 @SpringBootApplication(scanBasePackages = ["com.tcs.service.edt", "com.tcs.integration.common"])
 
@@ -46,11 +47,24 @@ fun main(args: Array<String>) {
 					val matchResult = regex.find(obj.getString("event-aggregate-type"))
 					val (eventName) = matchResult!!.destructured
 					val url = ctx.environment.getProperty("cm.int.elastic-search.url") + obj.getString("PARTITION_ID") + "-" + eventName
-					println("Elastic search URL :: $url")
+					println("Elastic search URLs :: $url")
 					try {
-						khttp.post(
+						val df = SimpleDateFormat("EE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH)
+						df.timeZone = TimeZone.getTimeZone("GMT")
+						val date = df.parse(obj.getString("DATE"))
+						val newDate = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+						val requestObject = mapOf(
+								"@timestamp" to newDate.format(df.parse(obj.getString("DATE"))),
+								"event_type" to eventName,
+								"shipment_id" to obj.getString("PARTITION_ID"),
+								"message" to it.optString("data")
+						)
+						val response = post(
 								url = url,
-								json = mapOf("data" to it.optString("data")))
+								headers = mapOf("Content-Type" to "application/json"),
+								json = requestObject)
+//						println(response.text)
+//						println(response.content)
 					} catch(e: Exception) {
 						println("Elastic search Exception :: $e")
 					}
