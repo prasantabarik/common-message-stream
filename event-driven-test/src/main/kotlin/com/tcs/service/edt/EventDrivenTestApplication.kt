@@ -26,7 +26,6 @@ fun main(args: Array<String>) {
 					val ts1 = Timestamp(today.time)
 					val obj = JSONObject(it.optString("data"))
 					ctx.getBean(Producer::class.java).create(PrepareECMR(obj.getString("shipmentId")))
-
 					/*
 					Even though just leave it for future reference
 					 */
@@ -48,7 +47,7 @@ fun main(args: Array<String>) {
 					val (eventName) = matchResult!!.destructured
 
 					khttp.post(
-							url  = "http://20.73.230.209:9200/events/1/" + obj.getString("PARTITION_ID") + "-" + eventName,
+							url  = ctx.environment.getProperty("cm.int.elastic-search.url") + obj.getString("PARTITION_ID") + "-" + eventName,
 							json = mapOf("data" to it.optString("data")))
 				}
 			}
