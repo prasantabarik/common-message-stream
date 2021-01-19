@@ -45,10 +45,15 @@ fun main(args: Array<String>) {
 					val regex = "\\.([A-Za-z]+)$".toRegex()
 					val matchResult = regex.find(obj.getString("event-aggregate-type"))
 					val (eventName) = matchResult!!.destructured
-
-					khttp.post(
-							url  = ctx.environment.getProperty("cm.int.elastic-search.url") + obj.getString("PARTITION_ID") + "-" + eventName,
-							json = mapOf("data" to it.optString("data")))
+					val url = ctx.environment.getProperty("cm.int.elastic-search.url") + obj.getString("PARTITION_ID") + "-" + eventName
+					println("Elastic search URL :: $url")
+					try {
+						khttp.post(
+								url = url,
+								json = mapOf("data" to it.optString("data")))
+					} catch(e: Exception) {
+						println("Elastic search Exception :: $e")
+					}
 				}
 			}
 		} catch(e: Exception) {
