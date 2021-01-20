@@ -12,15 +12,21 @@ import org.springframework.kafka.annotation.EnableKafka
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
 import org.springframework.kafka.core.*
+import org.springframework.stereotype.Component
 import java.io.Closeable
 import java.util.concurrent.CopyOnWriteArrayList
 
 @EnableKafka
+@Component
 class KafkaMessageProvider(private val configProperties: ConfigProperties) : AbstractMessageProvider(), Closeable {
     private var producerFactory: DefaultKafkaProducerFactory<String, Any>? = null
     private val messages: CopyOnWriteArrayList<String> = CopyOnWriteArrayList<String>()
     var consumerFactory: DefaultKafkaConsumerFactory<String, Any>? = null
     var listenerFactory: ConcurrentKafkaListenerContainerFactory<String, Any>? = null
+
+    init {
+        println("Kafka Message Provider object..")
+    }
 
     private fun producerFactory(): ProducerFactory<String, Any> {
         val configProps: MutableMap<String, Any> = HashMap()
@@ -56,7 +62,7 @@ class KafkaMessageProvider(private val configProperties: ConfigProperties) : Abs
     @KafkaListener(topics = ["com.tcs.service.edt.model.PrepareECMR", "com.tcs.service.model.PostECMR",
         "com.tcs.service.edt.model.ECMRPosted"], groupId = "kafka-subscribe")
     override fun receive(payload: Any) {
-        println("KAFKA MESSAGE RECEIVED :: $payload")
+        println("KAFKA MESSAGE RECEIVED FROM PROVIDER:: $payload")
         val record: ConsumerRecord<String, Any> = payload as ConsumerRecord<String, Any>
         this.messageListener!!.receive("kafka", record.value())
         messages.add(record.value() as String?)
