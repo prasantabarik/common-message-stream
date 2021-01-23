@@ -60,7 +60,7 @@ class KafkaMessageProvider(private val configProperties: ConfigProperties) : Abs
     }
 
     @KafkaListener(topics = ["com.tcs.service.edt.model.PrepareECMR", "com.tcs.service.model.PostECMR",
-        "com.tcs.service.edt.model.ECMRPosted"], groupId = "kafka-subscribe")
+        "com.tcs.service.model.ECMRPosted"], groupId = "kafka-subscribe")
     override fun receive(payload: Any) {
         println("KAFKA MESSAGE RECEIVED FROM PROVIDER:: $payload")
         val record: ConsumerRecord<String, Any> = payload as ConsumerRecord<String, Any>
